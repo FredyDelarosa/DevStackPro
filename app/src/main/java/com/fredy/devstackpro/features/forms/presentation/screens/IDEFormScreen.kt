@@ -11,17 +11,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fredy.devstackpro.core.components.DevStackButton
 import com.fredy.devstackpro.core.components.DevStackTextField
 import com.fredy.devstackpro.features.forms.presentation.viewmodels.IDEFormViewModel
+import com.fredy.devstackpro.features.forms.presentation.viewmodels.IDEFormViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IDEFormScreen(
-    viewModel: IDEFormViewModel,
+    factory: IDEFormViewModelFactory,
     ideId: Int?,
     onNavigateBack: () -> Unit
 ) {
+    val viewModel: IDEFormViewModel = viewModel(factory = factory)
+
     LaunchedEffect(ideId) {
         ideId?.let { viewModel.loadIDE(it) }
     }

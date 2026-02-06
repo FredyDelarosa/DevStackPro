@@ -11,6 +11,7 @@ import com.fredy.devstackpro.features.ide.domain.usecases.CreateIDEUseCase
 import com.fredy.devstackpro.features.ide.domain.usecases.GetIDEsUseCase
 import com.fredy.devstackpro.features.ide.domain.usecases.UpdateIDEUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,7 +23,8 @@ class IDEFormViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FormsUiState())
-    val uiState = _uiState.asStateFlow()
+
+    val uiState: StateFlow<FormsUiState> = _uiState.asStateFlow()
 
     var name by mutableStateOf("")
     var developer by mutableStateOf("")

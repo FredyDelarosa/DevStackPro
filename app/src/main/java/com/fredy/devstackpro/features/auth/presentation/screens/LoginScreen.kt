@@ -8,19 +8,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fredy.devstackpro.core.components.DevStackButton
 import com.fredy.devstackpro.core.components.DevStackTextField
 import com.fredy.devstackpro.features.auth.presentation.viewmodels.AuthViewModel
+import com.fredy.devstackpro.features.auth.presentation.viewmodels.AuthViewModelFactory
 
 @Composable
 fun LoginScreen(
-    viewModel: AuthViewModel,
+    factory: AuthViewModelFactory,
     onNavigateToRegister: () -> Unit,
     onLoginSuccess: () -> Unit
 ) {
+    val viewModel: AuthViewModel = viewModel(factory = factory)
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(

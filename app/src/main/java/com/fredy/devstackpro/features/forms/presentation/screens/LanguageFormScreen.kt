@@ -11,17 +11,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fredy.devstackpro.core.components.DevStackButton
 import com.fredy.devstackpro.core.components.DevStackTextField
 import com.fredy.devstackpro.features.forms.presentation.viewmodels.LanguageFormViewModel
+import com.fredy.devstackpro.features.forms.presentation.viewmodels.LanguageFormViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LanguageFormScreen(
-    viewModel: LanguageFormViewModel,
+    factory: LanguageFormViewModelFactory,
     languageId: Int?,
     onNavigateBack: () -> Unit
 ) {
+    val viewModel: LanguageFormViewModel = viewModel(factory = factory)
+
     LaunchedEffect(languageId) {
         languageId?.let { viewModel.loadLanguage(it) }
     }
