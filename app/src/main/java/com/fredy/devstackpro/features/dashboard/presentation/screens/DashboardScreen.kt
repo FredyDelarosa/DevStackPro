@@ -13,16 +13,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fredy.devstackpro.core.components.IDEItem
 import com.fredy.devstackpro.core.components.LanguageItem
 import com.fredy.devstackpro.features.dashboard.presentation.viewmodels.DashboardViewModel
+import com.fredy.devstackpro.features.dashboard.presentation.viewmodels.DashboardViewModelFactory
 import com.fredy.devstackpro.features.ide.domain.entities.IDE
 import com.fredy.devstackpro.features.language.domain.entities.Language
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    viewModel: DashboardViewModel,
+    factory: DashboardViewModelFactory,
     isLoggedIn: Boolean,
     onAddIDE: () -> Unit,
     onAddLanguage: () -> Unit,
@@ -32,12 +34,13 @@ fun DashboardScreen(
     onDeleteLanguage: (Int) -> Unit,
     onAuthClick: () -> Unit
 ) {
+    val viewModel: DashboardViewModel = viewModel(factory = factory)
+
     LaunchedEffect(Unit) {
         viewModel.loadDashboardData()
     }
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-
     var selectedTab by remember { mutableIntStateOf(0) }
     val tabs = listOf("IDEs", "Lenguajes")
 
