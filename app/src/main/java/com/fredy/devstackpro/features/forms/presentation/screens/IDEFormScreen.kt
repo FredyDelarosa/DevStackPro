@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,60 +34,77 @@ fun IDEFormScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(if (ideId == null) "Agregar IDE" else "Editar IDE") },
+            CenterAlignedTopAppBar(
+                title = { 
+                    Text(
+                        text = if (ideId == null) "Nuevo IDE" else "Editar IDE",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         }
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(16.dp)
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             uiState.error?.let { error ->
                 Text(
                     text = error,
-                    color = Color.Red,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
 
             uiState.successMessage?.let { success ->
                 Text(
                     text = success,
-                    color = Color.Green,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
 
             DevStackTextField(
                 value = viewModel.name,
                 onValueChange = { viewModel.name = it },
-                label = "Nombre del IDE"
+                label = "Nombre del IDE",
+                placeholder = "Ej. IntelliJ IDEA"
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(16.dp))
             DevStackTextField(
                 value = viewModel.developer,
                 onValueChange = { viewModel.developer = it },
-                label = "Desarrollador"
+                label = "Desarrollador",
+                placeholder = "Ej. JetBrains"
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(16.dp))
             DevStackTextField(
                 value = viewModel.releaseYear,
                 onValueChange = { viewModel.releaseYear = it },
-                label = "Año de Lanzamiento"
+                label = "Año de Lanzamiento",
+                placeholder = "Ej. 2001"
             )
-            Spacer(Modifier.height(24.dp))
+            
+            Spacer(modifier = Modifier.weight(1f))
 
             DevStackButton(
-                text = "Guardar",
+                text = if (ideId == null) "Crear IDE" else "Guardar Cambios",
                 isLoading = uiState.isLoading,
-                onClick = { viewModel.saveIDE(ideId, onNavigateBack) }
+                onClick = { viewModel.saveIDE(ideId, onNavigateBack) },
+                modifier = Modifier.padding(bottom = 16.dp)
             )
         }
     }

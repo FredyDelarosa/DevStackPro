@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,61 +34,77 @@ fun LanguageFormScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(if (languageId == null) "Nuevo Lenguaje" else "Editar Lenguaje") },
+            CenterAlignedTopAppBar(
+                title = { 
+                    Text(
+                        text = if (languageId == null) "Nuevo Lenguaje" else "Editar Lenguaje",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         }
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(16.dp)
                 .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             uiState.error?.let { error ->
                 Text(
                     text = error,
-                    color = Color.Red,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
 
             uiState.successMessage?.let { success ->
                 Text(
                     text = success,
-                    color = Color.Green,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
 
             DevStackTextField(
                 value = viewModel.name,
                 onValueChange = { viewModel.name = it },
-                label = "Nombre del Lenguaje"
+                label = "Nombre del Lenguaje",
+                placeholder = "Ej. Kotlin"
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(16.dp))
             DevStackTextField(
                 value = viewModel.paradigm,
                 onValueChange = { viewModel.paradigm = it },
-                label = "Paradigma (Ej: Funcional, POO)"
+                label = "Paradigma",
+                placeholder = "Ej. Multiplataforma, Funcional"
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(16.dp))
             DevStackTextField(
                 value = viewModel.createdYear,
                 onValueChange = { viewModel.createdYear = it },
-                label = "Año de Creación"
+                label = "Año de Creación",
+                placeholder = "Ej. 2011"
             )
-            Spacer(Modifier.height(32.dp))
+            
+            Spacer(modifier = Modifier.weight(1f))
 
             DevStackButton(
-                text = if (languageId == null) "Registrar Lenguaje" else "Actualizar Datos",
+                text = if (languageId == null) "Crear Lenguaje" else "Guardar Cambios",
                 isLoading = uiState.isLoading,
-                onClick = { viewModel.saveLanguage(languageId, onNavigateBack) }
+                onClick = { viewModel.saveLanguage(languageId, onNavigateBack) },
+                modifier = Modifier.padding(bottom = 16.dp)
             )
         }
     }
